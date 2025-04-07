@@ -1,6 +1,6 @@
 namespace ShootEmUp
 {
-    public interface IPauseGame
+    public interface IPauseGame : IGameEvent
     {
         void OnPause();
     }

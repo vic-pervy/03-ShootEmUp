@@ -1,33 +1,33 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace ShootEmUp
 {
-    public sealed class GameManager : MonoBehaviour
+    public sealed class GameManager : ITickable, IFixedTickable, IInitializable
     {
-        public Button PlayButton, PauseButton;
-        public TMP_Text CountDownText;
-        
-        private void Awake()
+        [Inject] public List<IGameEvent> gameEvents;
+        [Inject] public UIPresenter uiPresenter;
+
+        public void Initialize()
         {
-            PlayButton.onClick.AddListener(StartGame);
-            PauseButton.onClick.AddListener(PauseGame);
+            uiPresenter.PlayButton.onClick.AddListener(StartGame);
+            uiPresenter.PauseButton.onClick.AddListener(PauseGame);
             ChangeGameState(new PauseGameState());
         }
 
-        [ContextMenu("Start Game")]
         public void StartGame()
         {
             ChangeGameState(new CountDownState());
         }
 
-        [ContextMenu("Pause Game")]
         public void PauseGame()
         {
-           ChangeGameState(new PauseGameState());
+            ChangeGameState(new PauseGameState());
         }
 
         public void FinishGame()
@@ -35,9 +35,9 @@ namespace ShootEmUp
             Debug.Log("Game over!");
             Time.timeScale = 0;
         }
-        
-        
+
         private BaseGameState currentGameState;
+
         public void ChangeGameState(BaseGameState newState)
         {
             if (currentGameState != null) currentGameState.ExitState(this);
@@ -45,18 +45,14 @@ namespace ShootEmUp
             currentGameState.EnterState(this);
         }
 
-        void Update()
+        public void Tick()
         {
             if (currentGameState != null) currentGameState.Update();
         }
 
-        void FixedUpdate()
+        public void FixedTick()
         {
             if (currentGameState != null) currentGameState.FixedUpdate();
         }
     }
-
-   
-
-  
 }

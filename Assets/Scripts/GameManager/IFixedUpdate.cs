@@ -1,6 +1,6 @@
 namespace ShootEmUp
 {
-    interface IFixedUpdate
+    public interface IFixedUpdate : IGameEvent
     {
         void FixedUpdate();
     }

@@ -1,42 +1,42 @@
+using System;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using Zenject;
 
 namespace ShootEmUp
 {
-    public sealed class InputManager : MonoBehaviour, IUpdate, IFixedUpdate
+    public sealed class InputManager : ITickable
     {
-        public float HorizontalDirection { get; private set; }
-
-        [SerializeField]
+        [Inject]
+        IInputConfig inputConfig;
+        
+        [Inject]
         private GameObject character;
 
-        [SerializeField]
+        [Inject]
         private CharacterController characterController;
 
-        void IUpdate.Update()
+        void ITickable.Tick()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (inputConfig.FireButtonDown)
             {
-                characterController._fireRequired = true;
+                characterController.FireRequired = true;
             }
 
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (inputConfig.LeftButton)
             {
-                this.HorizontalDirection = -1;
+                characterController.HorizontalDirection = -1;
             }
-            else if (Input.GetKey(KeyCode.RightArrow))
+            else if (inputConfig.RightButton)
             {
-                this.HorizontalDirection = 1;
+                characterController.HorizontalDirection = 1;
             }
             else
             {
-                this.HorizontalDirection = 0;
+                characterController.HorizontalDirection = 0;
             }
         }
+
         
-        void IFixedUpdate.FixedUpdate()
-        {
-            this.character.GetComponent<MoveComponent>().MoveByRigidbodyVelocity(new Vector2(this.HorizontalDirection, 0) * Time.fixedDeltaTime);
-        }
     }
 }

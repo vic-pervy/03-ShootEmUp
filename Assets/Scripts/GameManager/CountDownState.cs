@@ -12,9 +12,9 @@ namespace ShootEmUp
             Time.timeScale = 0;
             this.gameManager = gameManager;
             countDownTime = 3;
-            gameManager.CountDownText.gameObject.SetActive(true);
-            gameManager.PauseButton.gameObject.SetActive(false);
-            gameManager.PlayButton.gameObject.SetActive(false);
+            gameManager.uiPresenter.CountDownText.gameObject.SetActive(true);
+            gameManager.uiPresenter.PauseButton.gameObject.SetActive(false);
+            gameManager.uiPresenter.PlayButton.gameObject.SetActive(false);
             Update();
         }
 
@@ -31,7 +31,7 @@ namespace ShootEmUp
                 gameManager.ChangeGameState(new PlayingGameState());
             }
 
-            gameManager.CountDownText.text = (Mathf.FloorToInt(countDownTime) + 1).ToString();
+            gameManager.uiPresenter.CountDownText.text = (Mathf.FloorToInt(countDownTime) + 1).ToString();
         }
 
         public override void FixedUpdate()

@@ -9,9 +9,9 @@ namespace ShootEmUp
         public override void EnterState(GameManager gameManager)
         {
             Time.timeScale = 0;
-            gameManager.CountDownText.gameObject.SetActive(false);
-            gameManager.PauseButton.gameObject.SetActive(false);
-            gameManager.PlayButton.gameObject.SetActive(true);
+            gameManager.uiPresenter.CountDownText.gameObject.SetActive(false);
+            gameManager.uiPresenter.PauseButton.gameObject.SetActive(false);
+            gameManager.uiPresenter.PlayButton.gameObject.SetActive(true);
         }
 
         public override void ExitState(GameManager gameManager)

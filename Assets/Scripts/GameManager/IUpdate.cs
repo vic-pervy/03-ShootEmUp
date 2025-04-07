@@ -1,6 +1,6 @@
 namespace ShootEmUp
 {
-    interface IUpdate
+    public interface IUpdate : IGameEvent
     {
         public void Update();
     }

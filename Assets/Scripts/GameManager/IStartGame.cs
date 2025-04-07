@@ -1,6 +1,6 @@
 namespace ShootEmUp
 {
-    public interface IStartGame
+    public interface IStartGame : IGameEvent
     {
         void OnStart();
     }
