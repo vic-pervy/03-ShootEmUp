@@ -4,30 +4,35 @@ using Zenject;
 
 namespace ShootEmUp
 {
-    public sealed class BulletSystem : MonoBehaviour, IFixedUpdate
+    public sealed class BulletSystem : IFixedUpdate
     {
         public class Pool : MemoryPool<Bullet>
         {
-            [Inject(Id = "bulletContainer")] private Transform container;
-            [Inject(Id = "worldTransform")] Transform worldTransform;
             public readonly HashSet<Bullet> ActiveBullets = new();
+
+            private readonly WorldData data;
+
+            private Pool(WorldData worldData)
+            {
+                this.data = worldData;
+            }
 
             protected override void OnCreated(Bullet item)
             {
-                item.transform.SetParent(this.container);
+                item.transform.SetParent(this.data.PoolContainer);
                 base.OnCreated(item);
             }
 
             protected override void OnSpawned(Bullet item)
             {
-                item.transform.SetParent(this.worldTransform);
+                item.transform.SetParent(this.data.WorldContainer);
                 ActiveBullets.Add(item);
                 base.OnSpawned(item);
             }
 
             protected override void OnDespawned(Bullet item)
             {
-                item.transform.SetParent(this.container);
+                item.transform.SetParent(this.data.PoolContainer);
                 ActiveBullets.Remove(item);
                 base.OnDespawned(item);
             }
@@ -37,8 +42,7 @@ namespace ShootEmUp
 
         //[SerializeField] private Bullet prefab;
         //[SerializeField] private Transform worldTransform;
-        [SerializeField] private LevelBounds levelBounds;
-
+        [Inject] private WorldData data;
         [Inject] private BulletSystem.Pool pool;
 
         //private readonly Queue<Bullet> m_bulletPool = new();
@@ -62,7 +66,7 @@ namespace ShootEmUp
             for (int i = 0, count = this.cache.Count; i < count; i++)
             {
                 var bullet = this.cache[i];
-                if (!this.levelBounds.InBounds(bullet.transform.position))
+                if (!data.LevelBounds.InBounds(bullet.transform.position))
                 {
                     this.RemoveBullet(bullet);
                 }

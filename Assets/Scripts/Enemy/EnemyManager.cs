@@ -6,7 +6,7 @@ using Zenject;
 
 namespace ShootEmUp
 {
-    public sealed class EnemyManager : MonoBehaviour, IUpdate
+    public sealed class EnemyManager : IUpdate
     {
         [Inject] private EnemySpawner enemySpawner;
         [Inject] private BulletSystem bulletSystem;

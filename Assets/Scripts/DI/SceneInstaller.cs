@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace ShootEmUp
@@ -8,8 +9,9 @@ namespace ShootEmUp
     {
         [SerializeField] private GameObject character;
         [SerializeField] private UIPresenter uiPresenter;
+        [FormerlySerializedAs("worldContainer")] [SerializeField] private WorldData worldData;
 
-        [SerializeField] private Transform worldTransform;
+        //[SerializeField] private Transform worldTransform;
 
         public override void InstallBindings()
         {
@@ -22,13 +24,12 @@ namespace ShootEmUp
             
             Container.BindInstance(character).AsCached();
             Container.BindInstance(uiPresenter).AsCached();
+            Container.BindInstance(worldData).AsSingle();
 
-            Container.BindInstance(worldTransform).WithId("worldTransform");
-
-            Container.BindInterfacesAndSelfTo<InputManager>().AsCached();
-            Container.BindInterfacesAndSelfTo<GameManager>().AsCached();
-            Container.BindInterfacesAndSelfTo<CharacterController>().AsCached();
-            Container.BindInterfacesAndSelfTo<UpdateSystem>().AsCached();
+            Container.BindInterfacesAndSelfTo<InputManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameManager>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CharacterController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<UpdateSystem>().AsSingle();
             
             
             //

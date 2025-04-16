@@ -24,7 +24,7 @@ namespace ShootEmUp
 
         public override void Update()
         {
-            countDownTime -= Time.unscaledTime;
+            countDownTime -= Time.unscaledDeltaTime;
             if (countDownTime <= 0)
             {
                 countDownTime = 0;

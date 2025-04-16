@@ -4,24 +4,23 @@ using Zenject;
 
 namespace ShootEmUp
 {
-    public sealed class EnemySpawner : MonoBehaviour
+    public sealed class EnemySpawner
     {
         public class Pool : MemoryPool<EnemyMoveAgent>
         {
             [Inject] private UpdateSystem updateSystem;
-            [Inject(Id = "enemyContainer")] private Transform container;
-            [Inject(Id = "worldTransform")] Transform worldTransform;
+            [Inject] WorldData data;
             public readonly HashSet<EnemyMoveAgent> Active = new();
-
+        
             protected override void OnCreated(EnemyMoveAgent item)
             {
-                item.transform.SetParent(this.container);
+                item.transform.SetParent(this.data.PoolContainer);
                 base.OnCreated(item);
             }
-
+        
             protected override void OnSpawned(EnemyMoveAgent item)
             {
-                item.transform.SetParent(this.worldTransform);
+                item.transform.SetParent(this.data.WorldContainer);
                 Active.Add(item);
                 foreach (var gameEvent in item.GetComponents(typeof(IGameEvent)))
                 {
@@ -29,10 +28,10 @@ namespace ShootEmUp
                 }
                 base.OnSpawned(item);
             }
-
+        
             protected override void OnDespawned(EnemyMoveAgent item)
             {
-                item.transform.SetParent(this.container);
+                item.transform.SetParent(this.data.PoolContainer);
                 Active.Remove(item);
                 foreach (var gameEvent in item.GetComponents(typeof(IGameEvent)))
                 {
@@ -42,8 +41,7 @@ namespace ShootEmUp
             }
         }
 
-        [Header("Spawn")] [SerializeField] private EnemyPositions enemyPositions;
-
+        [Inject] private WorldData data;
         [Inject] private GameObject character;
         [Inject] private EnemySpawner.Pool pool;
 
@@ -70,10 +68,10 @@ namespace ShootEmUp
 
             //enemy.transform.SetParent(this.worldTransform);
 
-            var spawnPosition = this.enemyPositions.RandomSpawnPosition();
+            var spawnPosition = data.EnemyPositions.RandomSpawnPosition();
             enemy.transform.position = spawnPosition.position;
 
-            var attackPosition = this.enemyPositions.RandomAttackPosition();
+            var attackPosition = data.EnemyPositions.RandomAttackPosition();
             enemy.gameObject.GetComponent<EnemyMoveAgent>().SetDestination(attackPosition.position);
 
             enemy.gameObject.GetComponent<EnemyAttackAgent>().SetTarget(this.character);

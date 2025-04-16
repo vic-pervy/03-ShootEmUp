@@ -60,8 +60,11 @@ namespace ShootEmUp
         {
             foreach (var c in gameLoopUpdateListeners)
             {
-                if (!((MonoBehaviour)c) || !((MonoBehaviour)c).enabled ||
-                    !((MonoBehaviour)c).gameObject.activeInHierarchy) continue;
+                if (c is MonoBehaviour monoBehaviour)
+                {
+                    if (!monoBehaviour || !monoBehaviour.enabled ||
+                        !monoBehaviour.gameObject.activeInHierarchy) continue;
+                }
                 c.Update();
             }
         }
@@ -70,8 +73,11 @@ namespace ShootEmUp
         {
             foreach (var c in gameLoopFixedUpdatesListeners)
             {
-                if (!((MonoBehaviour)c) || !((MonoBehaviour)c).enabled ||
-                    !((MonoBehaviour)c).gameObject.activeInHierarchy) continue;
+                if (c is MonoBehaviour monoBehaviour)
+                {
+                    if (!monoBehaviour || !monoBehaviour.enabled ||
+                        !monoBehaviour.gameObject.activeInHierarchy) continue;
+                }
                 c.FixedUpdate();
             }
         }
